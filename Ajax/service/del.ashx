@@ -1,4 +1,4 @@
-﻿<%@ WebHandler Language="C#" Class="add" %>
+﻿<%@ WebHandler Language="C#" Class="del" %>
 
 using System;
 using System.Web;
@@ -8,32 +8,31 @@ using System.Web.Script.Serialization;
 using System.Data;
 
 /// <summary>
-/// 添加上游平台
+/// 批量删除上游平台
 /// </summary>
-public class add : IHttpHandler {
-    
-    public void ProcessRequest (HttpContext context) {
+public class del : IHttpHandler {
+
+    public void ProcessRequest(HttpContext context)
+    {
         context.Response.ContentType = "text/plain";
         context.Response.AddHeader("Access-Control-Allow-Origin", "*");
-        string name = Sys.CNull(context.Request.Form["name"]).Replace("'", "''");                          //平台名称
-        string remark = Sys.CNull(context.Request.Form["remark"]).Replace("'", "''");                          //平台备注
 
+        string idstr = Sys.CNull(context.Request.Form["id"]);
         returntitle rt = new returntitle();
         JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
-        int id = 0;
 
+        int status = 0;
         try
         {
-            id = DBRun_Service.add(name, remark);
-            if (id > 0)
+            status = DBRun_Service.del(idstr);
+            if (status == 0)
             {
-                rt.id = id;
                 context.Response.Write(jsonSerializer.Serialize(rt));
             }
-            else
+            else  //若返回的status小于0，则表明发生了错误
             {
-                context.Response.Write(jsonSerializer.Serialize(new error(id)));
-            }
+                context.Response.Write(jsonSerializer.Serialize(new error(status)));
+            }    
         }
         catch (DB_Exception DBex)
         {
@@ -43,6 +42,7 @@ public class add : IHttpHandler {
         {
             context.Response.Write(jsonSerializer.Serialize(new error(-99, ex.Message)));
         }
+
     }
  
     public bool IsReusable {
@@ -54,7 +54,6 @@ public class add : IHttpHandler {
     private class returntitle
     {
         public string status { get; set; }
-        public int id { get; set; }  //成功返回上游平台ID
         public returntitle()
         {
             this.status = "OK";

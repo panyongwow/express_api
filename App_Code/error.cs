@@ -49,7 +49,7 @@ public class error
                     value = this._errordetail;
                     break;
                 case -100:
-                    value = "添加的上游平台名称已存在！";
+                    value = "该上游平台名称已存在！";
                     break;
                 case -102:
                     value = "该上游平台不存在，可能已被删除！";

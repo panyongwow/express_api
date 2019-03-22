@@ -103,7 +103,7 @@ public class DBRun_Service
             {
                 return -100;   //已存在同名上游平台
             }
-            if (RunDB.ExecNoQuery("update ownstore set name='" + name + "',remark='"+remark+"' where id=" + id + " and isdel=0") > 0)
+            if (RunDB.ExecNoQuery("update service set name='" + name + "',remark='"+remark+"' where id=" + id + " and isdel=0") > 0)
             {
                 return 0;
             }
